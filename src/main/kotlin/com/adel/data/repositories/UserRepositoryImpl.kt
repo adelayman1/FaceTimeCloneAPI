@@ -2,7 +2,10 @@ package com.adel.data.repositories
 
 import com.adel.data.models.User
 import com.adel.data.sources.userDataSources.UserRemoteDataSource
+import com.adel.data.utilities.extensions.toParticipantModel
 import com.adel.data.utilities.extensions.toUserModel
+import com.adel.domain.models.ParticipantModel
+import com.adel.domain.models.RoomModel
 import com.adel.domain.models.UserModel
 import com.adel.domain.repositories.UserRepository
 
@@ -59,6 +62,12 @@ class UserRepositoryImpl constructor(private val userRemoteDataSource: UserRemot
         return changeAccountData(userId = userId, verified = true)
     }
 
+    override suspend fun getParticipantsFromEmails(participantsEmails:List<String>?):List<ParticipantModel> {
+        return participantsEmails?.map {
+            getUserByEmail(it)?.toParticipantModel(true)
+                ?: throw Exception("there is user in participants not found")
+        } ?: throw Exception("participants not found")
+    }
     override suspend fun deleteAccount(userId: String): Boolean {
         return userRemoteDataSource.deleteAccountById(userId)
     }

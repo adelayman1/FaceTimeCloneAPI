@@ -13,4 +13,6 @@ interface RoomRepository {
     suspend fun getUserRooms(userId:String): List<RoomModel>
     suspend fun deleteRoom(roomId: String): Boolean
     suspend fun sendFcm(client: HttpClient, callInvitationRequestModel: CallInvitationRequestModel): Boolean
+    suspend fun checkIsUserAuthorOfRoom(userId: String,roomId: String):Boolean
+    suspend fun checkIsUserParticipantInRoom(userId: String,roomId: String):Boolean
 }

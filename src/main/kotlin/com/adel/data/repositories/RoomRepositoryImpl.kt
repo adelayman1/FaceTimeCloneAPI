@@ -53,7 +53,16 @@ class RoomRepositoryImpl constructor(
     override suspend fun deleteRoom(roomId: String): Boolean {
         return roomRemoteDataSource.deleteRoomById(roomId)
     }
-
+    override suspend fun checkIsUserAuthorOfRoom(userId: String,roomId: String):Boolean{
+        val roomInfo: RoomModel = getRoomInfo(roomId)
+            ?: throw Exception("room is not exist")
+        return roomInfo.roomAuthor == userId
+    }
+    override suspend fun checkIsUserParticipantInRoom(userId: String,roomId: String):Boolean{
+        val roomInfo: RoomModel = getRoomInfo(roomId)
+            ?: throw Exception("room is not exist")
+        return roomInfo.participants?.find { it.userId == userId } != null
+    }
     override suspend fun sendFcm(client: HttpClient, callInvitationRequestModel: CallInvitationRequestModel): Boolean =
         withContext(Dispatchers.Default) {
             val fcmSendResult = fcmRemoteDataSource.fcmSend(client, callInvitationRequestModel)

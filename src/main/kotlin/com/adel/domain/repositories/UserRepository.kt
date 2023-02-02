@@ -1,5 +1,7 @@
 package com.adel.domain.repositories
 
+import com.adel.data.utilities.extensions.toParticipantModel
+import com.adel.domain.models.ParticipantModel
 import com.adel.domain.models.UserModel
 
 interface UserRepository {
@@ -17,5 +19,6 @@ interface UserRepository {
     ): Boolean
     suspend fun getOtpCode(userId: String): Int?
     suspend fun makeAccountVerified(userId: String): Boolean
+    suspend fun getParticipantsFromEmails(participantsEmails:List<String>?):List<ParticipantModel>
     suspend fun deleteAccount(userId: String): Boolean
 }
