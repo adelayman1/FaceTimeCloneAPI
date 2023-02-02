@@ -538,6 +538,7 @@ Here You can get all rooms you joined to them
  ┃ ┃ ┣ 📂extensions
  ┃ ┃ ┃ ┣ 📜RoomExtensions.kt
  ┃ ┃ ┃ ┗ 📜UserExtensions.kt
+ ┃ ┃ ┣ 📜Constants.kt
  ┃ ┃ ┗ 📜UserJWTConfig.kt
  ┣ 📂di
  ┃ ┗ 📂modules
