@@ -22,11 +22,6 @@ fun Route.roomsRoute() {
     val getUserRoomsUseCase by inject<GetUserRoomsUseCase>()
     val joinRoomUseCase by inject<JoinRoomUseCase>()
 
-    val client = HttpClient(CIO){
-        install(ContentNegotiation){
-            jackson()
-        }
-    }
     authenticate("jwt_auth") {
         route(path = "/rooms") {
             post {
@@ -34,7 +29,7 @@ fun Route.roomsRoute() {
                 val isAccountVerified = principal!!.payload.getClaim("verified").asBoolean()
                 val userId = principal.payload.getClaim("userId").asString()
                 val createRoomParams = call.receive<CreateRoomParams>()
-                val createRoomResult = createRoomUseCase(client, userId, verified = isAccountVerified,createRoomParams.roomType, createRoomParams.participantsEmails)
+                val createRoomResult = createRoomUseCase(userId, verified = isAccountVerified,createRoomParams.roomType, createRoomParams.participantsEmails)
                 call.respond(message = createRoomResult, status = createRoomResult.statuesCode)
             }
             get {

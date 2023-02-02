@@ -61,7 +61,7 @@ val mainModule = module {
         CreateRoomUseCase(get(),get(),get())
     }
     single {
-        SendCallInvitationUseCase(get(),get())
+        SendCallInvitationUseCase(get(),get(),get())
     }
 
     single {
