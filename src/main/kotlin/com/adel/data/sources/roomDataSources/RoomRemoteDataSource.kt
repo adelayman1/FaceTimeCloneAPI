@@ -2,6 +2,7 @@ package com.adel.data.sources.roomDataSources
 
 import com.adel.data.models.Participant
 import com.adel.data.models.Room
+import com.adel.data.utilities.Constants
 import org.bson.types.ObjectId
 import org.litote.kmongo.Id
 import org.litote.kmongo.coroutine.CoroutineDatabase
@@ -12,7 +13,7 @@ import org.litote.kmongo.id.toId
 import org.litote.kmongo.or
 
 class RoomRemoteDataSource constructor(db: CoroutineDatabase) {
-    private val rooms = db.getCollection<Room>("rooms")
+    private val rooms = db.getCollection<Room>(Constants.ROOMS_COLLECTION)
     suspend fun createRoom(room: Room): Id<Room>? {
         val createRoomResult = rooms.insertOne(room)
         return room.roomId
