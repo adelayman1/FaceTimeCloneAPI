@@ -19,7 +19,6 @@ class UpdateUserDataUseCase constructor(private val userRepository: UserReposito
 
             var result: UserModel? = null
             runBlocking {
-
                 if (!name.isNullOrEmpty()) {
                     withContext(Dispatchers.Default) {
                         userRepository.changeAccountData(

@@ -13,8 +13,8 @@ class VerifyCodeUseCase constructor(private val userRepository: UserRepository) 
             ?: return BaseResponse.ErrorResponse(message = "userId is not exist")
         if (userData.isVerified)
             return BaseResponse.ErrorResponse(message = "user account has already verified")
-        if (otpCode == null||otpCode.toString().length<4)
-            return BaseResponse.ErrorResponse(message = "otp code is very short")
+        if (!checkIsOtpCodeValid(otpCode))
+            return BaseResponse.ErrorResponse(message = "otp code is not valid")
         val getOtpCodeResult = userRepository.getOtpCode(userId)
         return if(getOtpCodeResult == otpCode){
             userRepository.makeAccountVerified(userId)
@@ -25,4 +25,5 @@ class VerifyCodeUseCase constructor(private val userRepository: UserRepository) 
             BaseResponse.ErrorResponse(message = "code is not valid")
         }
     }
+    private fun checkIsOtpCodeValid(otpCode: Int?): Boolean = otpCode == null || otpCode.toString().length<4
 }

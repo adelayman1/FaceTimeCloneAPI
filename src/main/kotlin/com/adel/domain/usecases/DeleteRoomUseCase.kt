@@ -12,10 +12,7 @@ class DeleteRoomUseCase constructor(private val roomRepository: RoomRepository) 
                 return BaseResponse.ErrorResponse(message = "user is not verified")
             if (roomId.isNullOrBlank())
                 return BaseResponse.ErrorResponse(message = "roomId is not valid")
-            val roomInfo: RoomModel = roomRepository.getRoomInfo(roomId)
-                ?: return BaseResponse.ErrorResponse(message = "room is not exist")
-            //if user is not the author of room
-            if (roomInfo.roomAuthor != userId)
+            if (!roomRepository.checkIsUserAuthorOfRoom(userId,roomId))
                 return BaseResponse.ErrorResponse(
                     message = "You don't have access to delete",
                     statusCode = HttpStatusCode.Forbidden

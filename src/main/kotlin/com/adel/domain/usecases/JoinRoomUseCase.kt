@@ -14,13 +14,13 @@ class JoinRoomUseCase constructor(private val roomRepository: RoomRepository) {
                 return BaseResponse.ErrorResponse(message = "roomId is not valid")
             val roomInfoResult = roomRepository.getRoomInfo(roomId) ?: return BaseResponse.ErrorResponse(message = "Room not found")
             // if user is already the author
-            if(roomInfoResult.roomAuthor == userId)
+            if(roomRepository.checkIsUserAuthorOfRoom(userId, roomId))
                 return BaseResponse.SuccessResponse(
                     message = "user has joined successfully",
                     data = roomInfoResult
                 )
             // if user isn't participant
-            if(roomInfoResult.participants?.find { it.userId == userId } == null)
+            if(roomRepository.checkIsUserParticipantInRoom(userId, roomId))
                 BaseResponse.ErrorResponse(
                     message = "You don't have access to join room",
                     statusCode = HttpStatusCode.Forbidden
