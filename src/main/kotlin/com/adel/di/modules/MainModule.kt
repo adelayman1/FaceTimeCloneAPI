@@ -8,17 +8,11 @@ import com.adel.data.sources.userDataSources.UserRemoteDataSource
 import com.adel.domain.repositories.RoomRepository
 import com.adel.domain.repositories.UserRepository
 import com.adel.domain.usecases.*
-import org.jetbrains.exposed.sql.Database
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 
 val mainModule = module {
-    single {
-        val driverClassName = "org.h2.Driver"
-        val jdbcURL = "jdbc:h2:file:./build/db"
-        Database.connect(jdbcURL, driverClassName)
-    }
     single {
         val client = KMongo.createClient().coroutine
         client.getDatabase("admin")
