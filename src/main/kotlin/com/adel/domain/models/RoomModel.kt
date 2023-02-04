@@ -5,5 +5,5 @@ data class RoomModel(
     var roomType: RoomType,
     var roomAuthor: String,
     var participants: List<ParticipantModel>?,
-    var time: String,
+    var time: String="",
 )

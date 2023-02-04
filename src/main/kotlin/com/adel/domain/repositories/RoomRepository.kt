@@ -7,12 +7,12 @@ import com.adel.domain.models.RoomType
 import io.ktor.client.*
 
 interface RoomRepository {
-    suspend fun createRoom(roomType:RoomType,roomAuthor:String,participants:List<ParticipantModel>?):String
+    suspend fun createRoom(roomData:RoomModel):String
     suspend fun getRoomInfo(roomId:String):RoomModel?
     suspend fun joinRoom(userId:String,roomId:String): Boolean
     suspend fun getUserRooms(userId:String): List<RoomModel>
     suspend fun deleteRoom(roomId: String): Boolean
-    suspend fun sendFcm(client: HttpClient, callInvitationRequestModel: CallInvitationRequestModel): Boolean
+    suspend fun sendFcm(callInvitationRequestModel: CallInvitationRequestModel): Boolean
     suspend fun checkIsUserAuthorOfRoom(userId: String,roomId: String):Boolean
     suspend fun checkIsUserParticipantInRoom(userId: String,roomId: String):Boolean
 }

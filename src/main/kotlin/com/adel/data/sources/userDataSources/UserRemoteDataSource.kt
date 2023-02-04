@@ -12,9 +12,7 @@ import org.litote.kmongo.id.toId
 class UserRemoteDataSource constructor(db:CoroutineDatabase) {
     private val users = db.getCollection<User>(USERS_COLLECTION)
 
-     suspend fun insetUser(
-        newUser: User
-    ): Id<User>? {
+     suspend fun insetUser(newUser: User): Id<User>? {
          users.insertOne(newUser)
          return newUser.userId
     }
@@ -27,8 +25,8 @@ class UserRemoteDataSource constructor(db:CoroutineDatabase) {
          return users.findOne(User::userId eq bsonId)
     }
 
-     suspend fun updateUserDataById(userId:String,newUserData: User): Boolean =
-         getUserById(userId)?.let { user ->
+     suspend fun updateUserDataById(newUserData: User): Boolean =
+         getUserById(newUserData.userId.toString())?.let { user ->
             val updateResult = users.replaceOne(user.copy(name = newUserData.name , otpCode = newUserData.otpCode, verified = newUserData.verified, fcmToken = newUserData.fcmToken , email = newUserData.email , password = newUserData.password))
             updateResult.modifiedCount == 1L
         }?:false

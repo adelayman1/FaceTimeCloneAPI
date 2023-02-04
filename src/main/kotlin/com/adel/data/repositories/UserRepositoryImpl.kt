@@ -22,7 +22,12 @@ class UserRepositoryImpl constructor(private val userRemoteDataSource: UserRemot
     override suspend fun getUserById(userID: String): UserModel? {
         return userRemoteDataSource.getUserById(userId = userID)?.toUserModel()
     }
-
+/*//         userId: String,
+//        name: String?,
+//        email: String?,
+//        fcmToken: String?,
+//        otpCode: Int?,
+//        verified: Boolean?   */
     override suspend fun changeAccountData(
         userId: String,
         name: String?,
@@ -45,7 +50,7 @@ class UserRepositoryImpl constructor(private val userRemoteDataSource: UserRemot
             getUserResult = getUserResult.copy(otpCode = otpCode)
         if (verified != null)
             getUserResult = getUserResult.copy(verified = verified)
-        return userRemoteDataSource.updateUserDataById(userId, getUserResult)
+        return userRemoteDataSource.updateUserDataById(getUserResult)
     }
 
     override suspend fun getOtpCode(userId: String): Int? {

@@ -29,13 +29,13 @@ class RoomRemoteDataSource constructor(db: CoroutineDatabase) {
         return rooms.find(or(Room::roomAuthor eq userId,Room::participants/Participant::userId eq userId)).toList()
     }
 
-    suspend fun updateRoom(roomId: String, newRoom: Room) =
-        getRoomById(roomId)?.let { room ->
+    suspend fun updateRoom( newRoomData: Room) =
+        getRoomById(newRoomData.roomId.toString())?.let { room ->
             val updateResult = rooms.replaceOne(
                 room.copy(
-                    roomType=newRoom.roomType,
-                    roomAuthor = newRoom.roomAuthor,
-                    participants = newRoom.participants,
+                    roomType=newRoomData.roomType,
+                    roomAuthor = newRoomData.roomAuthor,
+                    participants = newRoomData.participants,
                 )
             )
             updateResult.modifiedCount == 1L

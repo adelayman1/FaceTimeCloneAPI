@@ -36,12 +36,14 @@ class CreateRoomUseCase constructor(
         }
     }
     private suspend fun createLinkRoom(userId:String):RoomModel {
-        val createRoomId = roomRepository.createRoom(RoomType.LINK, userId, null)
+        val roomData = RoomModel(roomType = RoomType.LINK, roomAuthor = userId, participants = null)
+        val createRoomId = roomRepository.createRoom(roomData)
         return checkIsRoomCreatedSuccessfully(createRoomId)
     }
     private suspend fun createFaceTimeRoom(roomType: RoomType, userId:String, participantsEmails: List<String>?):RoomModel {
         val participants = userRepository.getParticipantsFromEmails(participantsEmails)
-        val createdRoomId = roomRepository.createRoom(roomType, userId, participants)
+        val roomData = RoomModel(roomType = roomType, roomAuthor = userId, participants = participants)
+        val createdRoomId = roomRepository.createRoom(roomData)
         val createdRoom = checkIsRoomCreatedSuccessfully(createdRoomId)
         val sendCallInvitationResult = sendCallInvitationToUsers(createdRoom,participantsEmails!!)
         return if(sendCallInvitationResult)

@@ -8,6 +8,10 @@ import com.adel.data.sources.userDataSources.UserRemoteDataSource
 import com.adel.domain.repositories.RoomRepository
 import com.adel.domain.repositories.UserRepository
 import com.adel.domain.usecases.*
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.jackson.*
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
@@ -17,11 +21,18 @@ val mainModule = module {
         val client = KMongo.createClient().coroutine
         client.getDatabase("admin")
     }
+    single {
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                jackson()
+            }
+        }
+    }
     single<UserRepository> {
         UserRepositoryImpl(get())
     }
     single<RoomRepository> {
-        RoomRepositoryImpl(get(),get())
+        RoomRepositoryImpl(get(), get())
     }
     single {
         UserRemoteDataSource(get())
@@ -42,7 +53,7 @@ val mainModule = module {
         GetUserProfileUseCase(get())
     }
     single {
-        FcmRemoteDataSource()
+        FcmRemoteDataSource(get())
     }
     single {
         RoomRemoteDataSource(get())
@@ -58,10 +69,10 @@ val mainModule = module {
     }
 
     single {
-        CreateRoomUseCase(get(),get(),get())
+        CreateRoomUseCase(get(), get(), get())
     }
     single {
-        SendCallInvitationUseCase(get(),get(),get())
+        SendCallInvitationUseCase(get(), get())
     }
 
     single {
@@ -79,5 +90,4 @@ val mainModule = module {
     single {
         JoinRoomUseCase(get())
     }
-
 }

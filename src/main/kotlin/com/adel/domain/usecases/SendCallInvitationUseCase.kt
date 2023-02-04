@@ -10,8 +10,7 @@ import io.ktor.client.*
 
 class SendCallInvitationUseCase constructor(
     private val roomRepository: RoomRepository,
-    private val userRepository: UserRepository,
-    private val httpClient: HttpClient
+    private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(
         userId: String,
@@ -27,7 +26,6 @@ class SendCallInvitationUseCase constructor(
                 throw Exception("user is not verified")
             val participantsIds = getParticipantsIdsByEmails(participantsEmails)
             val createRoomResult = roomRepository.sendFcm(
-                httpClient,
                 CallInvitationRequestModel(
                     data = CallInvitationDataModel(
                         name = userRepository.getUserById(userId)?.userName ?: throw Exception("user not found"),

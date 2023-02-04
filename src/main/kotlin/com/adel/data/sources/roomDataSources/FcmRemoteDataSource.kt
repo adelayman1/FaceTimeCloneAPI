@@ -9,8 +9,8 @@ import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class FcmRemoteDataSource {
-    suspend fun fcmSend(client:HttpClient,callInvitationRequestModel: CallInvitationRequestModel) = withContext(Dispatchers.Default){
+class FcmRemoteDataSource constructor(private val client: HttpClient){
+    suspend fun fcmSend(callInvitationRequestModel: CallInvitationRequestModel) = withContext(Dispatchers.Default){
         client.post(FCM_BASE_URL) {
             contentType(ContentType.Application.Json)
             header("Authorization","key=${FCM_AUTH_KEY}")
