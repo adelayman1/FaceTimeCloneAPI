@@ -10,9 +10,7 @@ class DeleteAccountUseCase constructor(private val userRepository: UserRepositor
         try {
             if (userId.isNullOrBlank())
                 return BaseResponse.ErrorResponse(message = "userId is not valid")
-            GlobalScope.launch {
-                userRepository.deleteAccount(userId)
-            }.join()
+            GlobalScope.launch { userRepository.deleteAccount(userId) }.join()
             return BaseResponse.SuccessResponse(message = "account has deleted successfully", data = null)
         } catch (e: Exception) {
             return BaseResponse.ErrorResponse(message = "${e.message}")

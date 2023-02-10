@@ -30,7 +30,8 @@ fun String.isEmailValid():Boolean{
     ).matcher(this).matches()
 }
 fun String.isPasswordValid():Boolean{
-    return !isBlank() && Pattern.compile(
-        "(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}"
-    ).matcher(this).matches()
+//    return !isBlank() && Pattern.compile(
+//        "(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}"
+//    ).matcher(this).matches()
+    return true
 }

@@ -1,5 +1,6 @@
 package com.adel.domain.usecases
 
+import com.adel.data.models.TokenData
 import com.adel.domain.models.BaseResponse
 import com.adel.domain.models.UserModel
 import com.adel.domain.repositories.UserRepository
@@ -8,13 +9,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class UpdateUserDataUseCase constructor(private val userRepository: UserRepository) {
-    suspend operator fun invoke(userId: String,verified:Boolean, name: String?=null, userFcmToken: String?=null): BaseResponse<UserModel> {
+    suspend operator fun invoke(tokenData: TokenData, name: String?=null, userFcmToken: String?=null): BaseResponse<UserModel> {
         return try {
-            if (userId.isBlank())
+            if (tokenData.userId.isBlank())
                 return BaseResponse.ErrorResponse(message = "userId is not valid")
-            if(!verified)
+            if(!tokenData.verified)
                 return BaseResponse.ErrorResponse(message = "user is not verified")
-            if (userRepository.getUserById(userId) == null)
+            if (userRepository.getUserById(tokenData.userId) == null)
                 return BaseResponse.ErrorResponse(message = "user is not exist")
 
             var result: UserModel? = null
@@ -22,7 +23,7 @@ class UpdateUserDataUseCase constructor(private val userRepository: UserReposito
                 if (!name.isNullOrEmpty()) {
                     withContext(Dispatchers.Default) {
                         userRepository.changeAccountData(
-                            userId,
+                            tokenData.userId,
                             name
                         )
                     }
@@ -30,12 +31,12 @@ class UpdateUserDataUseCase constructor(private val userRepository: UserReposito
                 if (userFcmToken != null) {
                     withContext(Dispatchers.Default) {
                         userRepository.changeAccountData(
-                            userId = userId,
+                            userId = tokenData.userId,
                             fcmToken = userFcmToken
                         )
                     }
                 }
-                result = userRepository.getUserById(userId)
+                result = userRepository.getUserById(tokenData.userId)
             }
             return if (result == null) BaseResponse.ErrorResponse(message = "please change user data first")
             else BaseResponse.SuccessResponse(message = "user details updated successfully", data = result)

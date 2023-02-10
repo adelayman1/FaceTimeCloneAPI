@@ -1,5 +1,6 @@
 package com.adel.routes.user
 
+import com.adel.data.models.TokenData
 import com.adel.domain.usecases.*
 import com.adel.routes.user.requestsModels.CreateUserParams
 import com.adel.routes.user.requestsModels.UpdateUserParams
@@ -39,12 +40,12 @@ fun Route.userRoute() {
             call.respond(message = loginResult, status = loginResult.statuesCode)
         }
         authenticate("jwt_auth") {
-            route("fcm-token"){
+            route("fcm-token") {
                 get {
                     val principal = call.principal<JWTPrincipal>()
                     val userId = principal!!.payload.getClaim("userId").asString()
                     val isAccountVerified = principal.payload.getClaim("verified").asBoolean()
-                    val getUserFcmTokenResult = getUserFcmTokenUseCase(userId = userId, verified = isAccountVerified)
+                    val getUserFcmTokenResult = getUserFcmTokenUseCase(TokenData(userId = userId, verified = isAccountVerified))
                     call.respond(message = getUserFcmTokenResult, status = getUserFcmTokenResult.statuesCode)
                 }
                 patch {
@@ -54,8 +55,7 @@ fun Route.userRoute() {
                     val isAccountVerified = principal.payload.getClaim("verified").asBoolean()
                     val updateUserBodyParameters = call.receive<UpdateUserTokenParams>()
                     val updateUserDataResult = updateUserDataUseCase(
-                        userId = userId,
-                        verified = isAccountVerified,
+                        TokenData(userId = userId, verified = isAccountVerified),
                         userFcmToken = updateUserBodyParameters.fcmToken
                     )
                     call.respond(message = updateUserDataResult, status = updateUserDataResult.statuesCode)
@@ -68,8 +68,7 @@ fun Route.userRoute() {
                     val isAccountVerified = principal.payload.getClaim("verified").asBoolean()
                     val updateUserBodyParameters = call.receive<UpdateUserParams>()
                     val updateUserDataResult = updateUserDataUseCase(
-                        userId = userId,
-                        verified = isAccountVerified,
+                        TokenData(userId = userId, verified = isAccountVerified),
                         name = updateUserBodyParameters.name
                     )
                     call.respond(message = updateUserDataResult, status = updateUserDataResult.statuesCode)
@@ -93,10 +92,10 @@ fun Route.userRoute() {
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal!!.payload.getClaim("userId").asString()
                 val otp = call.request.queryParameters["otp_code"]?.toIntOrNull()
-                val verifyCodeResult = verifyCodeUseCase(userId = userId,otp)
+                val verifyCodeResult = verifyCodeUseCase(userId = userId, otp)
                 call.respond(message = verifyCodeResult, status = verifyCodeResult.statuesCode)
             }
-            delete{
+            delete {
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal!!.payload.getClaim("userId").asString()
                 val deleteAccountResult = deleteAccountUseCase(userId = userId)

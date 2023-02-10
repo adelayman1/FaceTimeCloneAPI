@@ -12,17 +12,15 @@ class SendEmailVerifyCodeUseCase constructor(private val userRepository: UserRep
     val password = System.getenv("email_password") ?: "password"
     suspend operator fun invoke(userId: String?): BaseResponse<Any> {
         try {
-
             if (userId.isNullOrBlank())
                 return BaseResponse.ErrorResponse(message = "userId is not valid")
-            val userData = userRepository.getUserById(userId)
-                ?: return BaseResponse.ErrorResponse(message = "userId is not exist")
+            val userData = userRepository.getUserById(userId) ?: return BaseResponse.ErrorResponse(message = "userId is not exist")
             if (userData.isVerified)
                 return BaseResponse.ErrorResponse(message = "user account is already verified")
             val otpCode = generateOtpCode()
             sendEmailToUser(userData, otpCode)
-            val changeAccountResult = userRepository.changeAccountData(userId, otpCode = otpCode)
-            return if (changeAccountResult)
+            val changeAccountDataResult = userRepository.changeAccountData(userId, otpCode = otpCode)
+            return if (changeAccountDataResult)
                 BaseResponse.SuccessResponse(message = "otp code sent successfully")
             else
                 BaseResponse.ErrorResponse(message = "unknown error")

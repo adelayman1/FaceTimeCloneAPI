@@ -7,6 +7,7 @@ import com.adel.data.sources.roomDataSources.FcmRemoteDataSource
 import com.adel.data.sources.roomDataSources.RoomRemoteDataSource
 import com.adel.data.utilities.extensions.fromParticipantsModel
 import com.adel.data.utilities.extensions.toRoomModel
+import com.adel.domain.models.ParticipantModel
 import com.adel.domain.models.RoomModel
 import com.adel.domain.repositories.RoomRepository
 import io.ktor.client.*
@@ -36,10 +37,15 @@ class RoomRepositoryImpl constructor(
     }
     override suspend fun joinRoom(userId: String, roomId: String): Boolean {
         val getRoomResult = roomRemoteDataSource.getRoomById(roomId) ?: throw Exception("room not found")
-        val newParticipants: List<Participant>? = getRoomResult.participants
         // update missedCall value for user which has joined
-        newParticipants?.first { it.userId == userId }?.missedCall = false
+        val newParticipants = updateParticipantMissedCallState(getRoomResult.participants,userId,isMissedCall = false)
         return roomRemoteDataSource.updateRoom(getRoomResult.copy(participants = newParticipants))
+    }
+    override fun updateParticipantMissedCallState(participants: List<Participant>?,userId: String,isMissedCall:Boolean):List<Participant>?{
+        val newParticipants: List<Participant>? = participants
+        // update missedCall value for user which has passed
+        newParticipants?.first { it.userId == userId }?.missedCall = isMissedCall
+        return newParticipants
     }
     override suspend fun getUserRooms(userId: String): List<RoomModel> {
         val getUserRoomsResult = roomRemoteDataSource.findRoomsByUserId(userId)
@@ -62,6 +68,8 @@ class RoomRepositoryImpl constructor(
         withContext(Dispatchers.Default) {
             val fcmSendResult = fcmRemoteDataSource.fcmSend(callInvitationRequestModel)
             // check is fcm sent successfully
+            println("tttttttt")
+            println(fcmSendResult.call.response)
             fcmSendResult.call.response.status == HttpStatusCode.OK
         }
 }

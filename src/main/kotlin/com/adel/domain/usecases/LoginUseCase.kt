@@ -1,5 +1,6 @@
 package com.adel.domain.usecases
 
+import com.adel.data.models.TokenData
 import com.adel.data.utilities.extensions.isEmailValid
 import com.adel.data.utilities.extensions.isPasswordValid
 import com.adel.data.utilities.generateToken
@@ -16,7 +17,7 @@ class LoginUseCase constructor(private val userRepository: UserRepository) {
                 return BaseResponse.ErrorResponse(message = "Password is not valid")
             val loginResult = userRepository.getUserByEmail(email)
              return if(loginResult!=null){
-                 val accessToken = generateToken(userId = loginResult.userID,loginResult.isVerified)
+                 val accessToken = generateToken(TokenData(userId = loginResult.userID,verified = loginResult.isVerified))
                  loginResult.userToken = accessToken
                  BaseResponse.SuccessResponse(
                      message = "Login done successfully",

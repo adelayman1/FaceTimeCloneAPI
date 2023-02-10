@@ -1,5 +1,6 @@
 package com.adel.domain.usecases
 
+import com.adel.data.models.TokenData
 import com.adel.data.utilities.Constants.FCM_GUEST_TOKEN
 import com.adel.data.utilities.extensions.isEmailValid
 import com.adel.data.utilities.extensions.isPasswordValid
@@ -27,7 +28,7 @@ class RegisterUseCase constructor(private val userRepository: UserRepository) {
                 return BaseResponse.ErrorResponse(message = "This email has been used before")
             val registerResult = userRepository.addUser(email, password, name, fcmToken ?: FCM_GUEST_TOKEN)
             return if (registerResult != null) {
-                val accessToken = generateToken(userId = registerResult.userID, false)
+                val accessToken = generateToken(TokenData(userId = registerResult.userID, verified=false))
                 registerResult.userToken = accessToken
                 BaseResponse.SuccessResponse(message = "Registration done successfully", data = registerResult)
             } else BaseResponse.ErrorResponse(message = "Unknown Error")

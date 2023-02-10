@@ -1,5 +1,6 @@
 package com.adel.routes.rooms
 
+import com.adel.data.models.TokenData
 import com.adel.domain.usecases.*
 import com.adel.routes.rooms.requestModels.CreateRoomParams
 import com.adel.routes.rooms.requestModels.JoinRoomParams
@@ -29,28 +30,28 @@ fun Route.roomsRoute() {
                 val isAccountVerified = principal!!.payload.getClaim("verified").asBoolean()
                 val userId = principal.payload.getClaim("userId").asString()
                 val createRoomParams = call.receive<CreateRoomParams>()
-                val createRoomResult = createRoomUseCase(userId, verified = isAccountVerified,createRoomParams.roomType, createRoomParams.participantsEmails)
+                val createRoomResult = createRoomUseCase(TokenData(userId = userId, verified = isAccountVerified),createRoomParams)
                 call.respond(message = createRoomResult, status = createRoomResult.statuesCode)
             }
             get {
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal!!.payload.getClaim("userId").asString()
                 val isAccountVerified = principal.payload.getClaim("verified").asBoolean()
-                val getUserRoomsResult = getUserRoomsUseCase(userId, verified = isAccountVerified)
+                val getUserRoomsResult = getUserRoomsUseCase(TokenData(userId = userId, verified = isAccountVerified),)
                 call.respond(message = getUserRoomsResult, status = getUserRoomsResult.statuesCode)
             }
             get("/{room_id}"){
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal!!.payload.getClaim("userId").asString()
                 val isAccountVerified = principal.payload.getClaim("verified").asBoolean()
-                val getRoomInfoResult = getRoomInfoUseCase(userId = userId, roomId = call.parameters["room_id"], verified = isAccountVerified)
+                val getRoomInfoResult = getRoomInfoUseCase(TokenData(userId = userId, verified = isAccountVerified), roomId = call.parameters["room_id"])
                 call.respond(message = getRoomInfoResult, status = getRoomInfoResult.statuesCode)
             }
             delete("/{room_id}")  {
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal!!.payload.getClaim("userId").asString()
                 val isAccountVerified = principal.payload.getClaim("verified").asBoolean()
-                val deleteRoomResult = deleteRoomUseCase(userId = userId, roomId = call.parameters["room_id"], verified = isAccountVerified)
+                val deleteRoomResult = deleteRoomUseCase(TokenData(userId = userId, verified = isAccountVerified), roomId = call.parameters["room_id"])
                 call.respond(message = deleteRoomResult, status = deleteRoomResult.statuesCode)
             }
             post("/{room_id}/join"){
@@ -58,7 +59,7 @@ fun Route.roomsRoute() {
                 val userId = principal!!.payload.getClaim("userId").asString()
                 val isAccountVerified = principal.payload.getClaim("verified").asBoolean()
                 val joinRoomParams = call.receive<JoinRoomParams>()
-                val joinRoomResult = joinRoomUseCase(userId = userId, roomId = joinRoomParams.roomId, verified = isAccountVerified)
+                val joinRoomResult = joinRoomUseCase(TokenData(userId = userId, verified = isAccountVerified), roomId = joinRoomParams.roomId)
                 call.respond(message = joinRoomResult, status = joinRoomResult.statuesCode)
             }
         }
