@@ -5,7 +5,6 @@ import com.adel.data.sources.userDataSources.UserRemoteDataSource
 import com.adel.data.utilities.extensions.toParticipantModel
 import com.adel.data.utilities.extensions.toUserModel
 import com.adel.domain.models.ParticipantModel
-import com.adel.domain.models.RoomModel
 import com.adel.domain.models.UserModel
 import com.adel.domain.repositories.UserRepository
 

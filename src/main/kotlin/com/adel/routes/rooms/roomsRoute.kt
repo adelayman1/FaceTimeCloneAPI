@@ -4,10 +4,6 @@ import com.adel.data.models.TokenData
 import com.adel.domain.usecases.*
 import com.adel.routes.rooms.requestModels.CreateRoomParams
 import com.adel.routes.rooms.requestModels.JoinRoomParams
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*

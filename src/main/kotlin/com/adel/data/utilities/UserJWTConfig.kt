@@ -1,10 +1,10 @@
 package com.adel.data.utilities
 
+import com.adel.data.models.TokenData
 import com.adel.data.utilities.UserJWTConfig.AUDIENCE
 import com.adel.data.utilities.UserJWTConfig.ISSUER
 import com.adel.data.utilities.UserJWTConfig.REFRESH_TOKEN_EXPIRE_DATE
 import com.adel.data.utilities.UserJWTConfig.SECRET
-import com.adel.data.models.TokenData
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import java.util.*

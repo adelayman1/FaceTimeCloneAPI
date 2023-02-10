@@ -2,10 +2,7 @@ package com.adel.domain.repositories
 
 import com.adel.data.models.CallInvitationRequestModel
 import com.adel.data.models.Participant
-import com.adel.domain.models.ParticipantModel
 import com.adel.domain.models.RoomModel
-import com.adel.domain.models.RoomType
-import io.ktor.client.*
 
 interface RoomRepository {
     suspend fun createRoom(roomData:RoomModel):String

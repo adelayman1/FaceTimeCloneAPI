@@ -1,6 +1,5 @@
 package com.adel.domain.repositories
 
-import com.adel.data.utilities.extensions.toParticipantModel
 import com.adel.domain.models.ParticipantModel
 import com.adel.domain.models.UserModel
 

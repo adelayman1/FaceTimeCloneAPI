@@ -2,7 +2,6 @@ package com.adel.domain.usecases
 
 import com.adel.data.models.TokenData
 import com.adel.domain.models.BaseResponse
-import com.adel.domain.models.RoomModel
 import com.adel.domain.repositories.RoomRepository
 import io.ktor.http.*
 
