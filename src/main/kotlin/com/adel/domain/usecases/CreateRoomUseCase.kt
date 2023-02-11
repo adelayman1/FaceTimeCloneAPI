@@ -38,7 +38,7 @@ class CreateRoomUseCase constructor(
     }
 
     // return true if room type [faceTime-audioCall] and participants are not defined
-    private fun checkIsParticipantsIsRequiredAndNotDefined(roomData: CreateRoomParams) =
+    private fun checkIsParticipantsAreRequiredAndNotDefined(roomData: CreateRoomParams) =
         roomData.roomType != RoomType.LINK && roomData.participantsEmails.isNullOrEmpty()
 
     private suspend fun createLinkRoom(): RoomModel {
