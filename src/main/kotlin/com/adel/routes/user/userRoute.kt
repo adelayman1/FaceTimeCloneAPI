@@ -87,7 +87,7 @@ fun Route.userRoute() {
             get("/profile") {
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal!!.payload.getClaim("userId").asString()
-                val getProfileBodyParameters = call.receive<GetProfileParams>()
+                val getProfileBodyParameters = call.receive<GetProfileParams>();
                 val getUserProfileResult = getUserProfileUseCase(userId = getProfileBodyParameters.userId)
                 call.respond(message = getUserProfileResult, status = getUserProfileResult.statuesCode)
             }
