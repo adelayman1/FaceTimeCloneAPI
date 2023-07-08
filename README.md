@@ -206,7 +206,7 @@ In this request you can change your account information like name
 ```
 ---
 #### [GET](#endpoints) Profile
-In this request you can get your profile and account data
+In this request you can get your profile and account data for any user by id
 
 **Important Note:you must active your account first. you can active account by verify it**
 ```
@@ -215,6 +215,13 @@ In this request you can get your profile and account data
 **Request Headers**
 
 ```Authorization```:```Bearer TOKEN```
+
+**Body** raw (json)
+```json
+{
+    "userId":"USER_ID"
+}
+```
 **Response**
 ```json
 {
