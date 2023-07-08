@@ -23,7 +23,7 @@ class CreateRoomUseCase constructor(
                 return BaseResponse.ErrorResponse(message = "user is not verified")
             userId = tokenData.userId
 
-            if (isParticipantsRequiredAndNotDefined(roomData))
+            if (checkIsParticipantsIsRequiredAndNotDefined(roomData))
                 return BaseResponse.ErrorResponse(message = "participants are not found", statusCode = HttpStatusCode.NotFound)
             return if (roomData.roomType != RoomType.LINK) {
                 val createdRoom = createFaceTimeRoom(roomData)
@@ -38,7 +38,7 @@ class CreateRoomUseCase constructor(
     }
 
     // return true if room type [faceTime-audioCall] and participants are not defined
-    private fun isParticipantsRequiredAndNotDefined(roomData: CreateRoomParams) =
+    private fun checkIsParticipantsIsRequiredAndNotDefined(roomData: CreateRoomParams) =
         roomData.roomType != RoomType.LINK && roomData.participantsEmails.isNullOrEmpty()
 
     private suspend fun createLinkRoom(): RoomModel {
