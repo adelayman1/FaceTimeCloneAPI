@@ -8,6 +8,7 @@ import com.adel.data.sources.userDataSources.UserRemoteDataSource
 import com.adel.domain.repositories.RoomRepository
 import com.adel.domain.repositories.UserRepository
 import com.adel.domain.usecases.*
+import com.mongodb.ConnectionString
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -18,7 +19,7 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 val mainModule = module {
     single {
-        val client = KMongo.createClient().coroutine
+        val client = KMongo.createClient(ConnectionString("mongodb://127.0.0.1:27017")).coroutine
         client.getDatabase("admin")
     }
     single {

@@ -27,6 +27,7 @@ class RegisterUseCase constructor(private val userRepository: UserRepository) {
             if (checkIsUserEmailUsed(email))
                 return BaseResponse.ErrorResponse(message = "This email has been used before")
             val registerResult = userRepository.addUser(email, password, name, fcmToken ?: FCM_GUEST_TOKEN)
+            println("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy$registerResult")
             return if (registerResult != null) {
                 val accessToken = generateToken(TokenData(userId = registerResult.userID, verified=false))
                 registerResult.userToken = accessToken

@@ -26,7 +26,7 @@ class RoomRepositoryImpl constructor(
                     roomType = roomData.roomType.id,
                     roomAuthor = roomData.roomAuthor,
                     participants = roomData.participants?.map { it.fromParticipantsModel() },
-                    time = LocalDateTime.now().toString()
+                    time = System.currentTimeMillis().toString()
                 )
             ).toString()
         }

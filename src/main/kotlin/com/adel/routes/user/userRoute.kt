@@ -1,11 +1,12 @@
 package com.adel.routes.user
 
 import com.adel.data.models.TokenData
+import com.adel.data.models.User
+import com.adel.data.utilities.Constants
 import com.adel.domain.usecases.*
-import com.adel.routes.user.requestsModels.CreateUserParams
-import com.adel.routes.user.requestsModels.UpdateUserParams
-import com.adel.routes.user.requestsModels.UpdateUserTokenParams
-import com.adel.routes.user.requestsModels.UserLoginParams
+import com.adel.routes.user.requestsModels.*
+import com.mongodb.ConnectionString
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -13,6 +14,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.litote.kmongo.coroutine.coroutine
+import org.litote.kmongo.reactivestreams.KMongo
 
 fun Route.userRoute() {
     val registerUseCase by inject<RegisterUseCase>()
@@ -35,9 +38,14 @@ fun Route.userRoute() {
             call.respond(message = registerResult, status = registerResult.statuesCode)
         }
         post(path = "/login") {
-            val userFormParameters = call.receive<UserLoginParams>()
-            val loginResult = loginUseCase(email = userFormParameters.email, password = userFormParameters.password)
-            call.respond(message = loginResult, status = loginResult.statuesCode)
+            try {
+                val userFormParameters = call.receive<UserLoginParams>()
+                val loginResult = loginUseCase(email = userFormParameters.email, password = userFormParameters.password)
+                call.respond(message = loginResult, status = loginResult.statuesCode)
+            }catch (e:Exception){
+                call.respond(message = e.message.toString(), status = HttpStatusCode.BadRequest)
+            }
+
         }
         authenticate("jwt_auth") {
             route("fcm-token") {
@@ -79,7 +87,8 @@ fun Route.userRoute() {
             get("/profile") {
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal!!.payload.getClaim("userId").asString()
-                val getUserProfileResult = getUserProfileUseCase(userId = userId)
+                val getProfileBodyParameters = call.receive<GetProfileParams>()
+                val getUserProfileResult = getUserProfileUseCase(userId = getProfileBodyParameters.userId)
                 call.respond(message = getUserProfileResult, status = getUserProfileResult.statuesCode)
             }
             post("/send-email-code") {
