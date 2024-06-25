@@ -4,6 +4,7 @@ import com.adel.data.models.TokenData
 import com.adel.domain.models.BaseResponse
 import com.adel.domain.models.RoomModel
 import com.adel.domain.repositories.RoomRepository
+import java.util.*
 
 class GetUserRoomsUseCase constructor(private val roomRepository: RoomRepository) {
     suspend operator fun invoke(tokenData: TokenData): BaseResponse<List<RoomModel>> {
@@ -12,7 +13,11 @@ class GetUserRoomsUseCase constructor(private val roomRepository: RoomRepository
                 return BaseResponse.ErrorResponse(message = "userId is not valid")
             if(!tokenData.verified)
                 return BaseResponse.ErrorResponse(message = "user is not verified")
-            val getUserRoomsResult = roomRepository.getUserRooms(tokenData.userId)
+            val getUserRoomsResult = roomRepository.getUserRooms(tokenData.userId).sortedBy {
+                val timeAsDate=Date() //TODO("REFACTOR")
+                timeAsDate.time=it.time.toLong()
+                timeAsDate
+            }.asReversed()
             return BaseResponse.SuccessResponse(message = "rooms have got successfully", data = getUserRoomsResult)
         } catch (e: Exception) {
             return BaseResponse.ErrorResponse(message = "${e.message}")

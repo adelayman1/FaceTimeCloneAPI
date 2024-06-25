@@ -5,6 +5,7 @@ import com.adel.data.utilities.UserJWTConfig.ISSUER
 import com.adel.data.utilities.UserJWTConfig.REALM
 import com.adel.data.utilities.UserJWTConfig.SECRET
 import com.adel.domain.models.BaseResponse
+import com.adel.domain.models.RoomModel
 import com.adel.domain.repositories.UserRepository
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -38,7 +39,7 @@ fun Application.configureSecurity() {
                 }
             }
             challenge { _, _ ->
-                call.respond(HttpStatusCode.Unauthorized, BaseResponse.ErrorResponse(message = "Token is not valid"))
+                call.respond(HttpStatusCode.Unauthorized, BaseResponse.ErrorResponse<RoomModel>(message = "Token is not valid"))
             }
         }
     }

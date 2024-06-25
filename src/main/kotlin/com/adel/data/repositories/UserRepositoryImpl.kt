@@ -7,6 +7,7 @@ import com.adel.data.utilities.extensions.toUserModel
 import com.adel.domain.models.ParticipantModel
 import com.adel.domain.models.UserModel
 import com.adel.domain.repositories.UserRepository
+import org.omg.CORBA.UnknownUserException
 
 class UserRepositoryImpl constructor(private val userRemoteDataSource: UserRemoteDataSource) : UserRepository {
     override suspend fun addUser(email: String, password: String, name: String, fcmToken: String): UserModel? {
@@ -15,7 +16,16 @@ class UserRepositoryImpl constructor(private val userRemoteDataSource: UserRemot
     }
 
     override suspend fun getUserByEmail(email: String): UserModel? {
-        return userRemoteDataSource.getUserByEmail(email)?.toUserModel()
+       return userRemoteDataSource.getUserByEmail(email)?.toUserModel()
+    }
+    override suspend fun login(email: String,password: String): UserModel? {
+        val userData = userRemoteDataSource.getUserByEmail(email)
+        if(userData!=null) {
+            if (userData.password == password) {
+                return userRemoteDataSource.getUserByEmail(email)?.toUserModel()
+            }
+        }
+        throw Exception("user not found")
     }
 
     override suspend fun getUserById(userID: String): UserModel? {

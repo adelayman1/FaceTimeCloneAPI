@@ -15,7 +15,7 @@ class LoginUseCase constructor(private val userRepository: UserRepository) {
                 return BaseResponse.ErrorResponse(message = "Email is not valid")
             if (!password.isPasswordValid())
                 return BaseResponse.ErrorResponse(message = "Password is not valid")
-            val loginResult = userRepository.getUserByEmail(email)
+            val loginResult = userRepository.login(email,password)
              return if(loginResult!=null){
                  val accessToken = generateToken(TokenData(userId = loginResult.userID,verified = loginResult.isVerified))
                  loginResult.userToken = accessToken

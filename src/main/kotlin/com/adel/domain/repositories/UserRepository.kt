@@ -20,4 +20,5 @@ interface UserRepository {
     suspend fun makeAccountVerified(userId: String): Boolean
     suspend fun getParticipantsFromEmails(participantsEmails:List<String>?):List<ParticipantModel>
     suspend fun deleteAccount(userId: String): Boolean
+    suspend fun login(email: String,password: String): UserModel?
 }

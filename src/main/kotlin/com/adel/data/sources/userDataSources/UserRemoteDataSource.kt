@@ -2,15 +2,26 @@ package com.adel.data.sources.userDataSources
 
 import com.adel.data.models.User
 import com.adel.data.utilities.Constants.USERS_COLLECTION
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.bson.types.ObjectId
 import org.litote.kmongo.Id
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.replaceOne
+import org.litote.kmongo.coroutine.toList
 import org.litote.kmongo.eq
 import org.litote.kmongo.id.toId
 
 class UserRemoteDataSource constructor(db:CoroutineDatabase) {
     private val users = db.getCollection<User>(USERS_COLLECTION)
+    init {
+        println("ahaaaaa")
+        println("${users.find()}")
+//        println("${users.collection.countDocuments()}")
+        println("ahaaaaaa")
+    }
 
      suspend fun insetUser(newUser: User): Id<User>? {
          users.insertOne(newUser)

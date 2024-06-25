@@ -19,7 +19,7 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 val mainModule = module {
     single {
-        val client = KMongo.createClient(ConnectionString("mongodb://127.0.0.1:27017")).coroutine
+        val client = KMongo.createClient().coroutine
         client.getDatabase("admin")
     }
     single {
@@ -90,5 +90,8 @@ val mainModule = module {
 
     single {
         JoinRoomUseCase(get())
+    }
+    single {
+        GetUserProfileByEmailUseCase(get())
     }
 }

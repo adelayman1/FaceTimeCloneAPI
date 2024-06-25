@@ -10,7 +10,8 @@ import org.apache.commons.mail.SimpleEmail
 
 class SendEmailVerifyCodeUseCase constructor(private val userRepository: UserRepository) {
     val password = System.getenv("email_password") ?: "password"
-    suspend operator fun invoke(userId: String?): BaseResponse<Any> {
+    suspend operator fun invoke(userId: String?): BaseResponse<String> {
+        // TODO("FCM TOKEN UPDATE")
         try {
             if (userId.isNullOrBlank())
                 return BaseResponse.ErrorResponse(message = "userId is not valid")

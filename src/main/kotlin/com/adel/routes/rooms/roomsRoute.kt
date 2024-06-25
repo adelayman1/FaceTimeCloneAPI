@@ -34,6 +34,7 @@ fun Route.roomsRoute() {
                 val userId = principal!!.payload.getClaim("userId").asString()
                 val isAccountVerified = principal.payload.getClaim("verified").asBoolean()
                 val getUserRoomsResult = getUserRoomsUseCase(TokenData(userId = userId, verified = isAccountVerified),)
+                println("yyyyyyyyyyyyyyy ${getRoomInfoUseCase}")
                 call.respond(message = getUserRoomsResult, status = getUserRoomsResult.statuesCode)
             }
             get("/{room_id}"){

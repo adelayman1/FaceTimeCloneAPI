@@ -8,9 +8,9 @@ val kmongo_version: String by project
 
 
 plugins {
-    kotlin("jvm") version "1.7.22"
+    kotlin("jvm") version "1.8.0"
     id("io.ktor.plugin") version "2.2.1"
-                id("org.jetbrains.kotlin.plugin.serialization") version "1.7.22"
+                id("org.jetbrains.kotlin.plugin.serialization") version "1.8.0"
 }
 
 group = "com.adel"
@@ -20,6 +20,12 @@ application {
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+ktor {
+    docker {
+        localImageName.set("facetime-docker-image")
+        imageTag.set("0.0.1-preview")
+    }
 }
 
 repositories {

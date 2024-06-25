@@ -2,6 +2,7 @@ package com.adel.routes.user
 
 import com.adel.data.models.TokenData
 import com.adel.data.models.User
+import com.adel.data.sources.userDataSources.UserRemoteDataSource
 import com.adel.data.utilities.Constants
 import com.adel.domain.usecases.*
 import com.adel.routes.user.requestsModels.*
@@ -26,6 +27,8 @@ fun Route.userRoute() {
     val sendEmailVerifyCodeUseCase by inject<SendEmailVerifyCodeUseCase>()
     val verifyCodeUseCase by inject<VerifyCodeUseCase>()
     val deleteAccountUseCase by inject<DeleteAccountUseCase>()
+    val getUserProfileByEmailUseCase by inject<GetUserProfileByEmailUseCase>()
+
     route(path = "/user") {
         post(path = "/register") {
             val userFormParameters = call.receive<CreateUserParams>()
@@ -37,6 +40,7 @@ fun Route.userRoute() {
             )
             call.respond(message = registerResult, status = registerResult.statuesCode)
         }
+
         post(path = "/login") {
             try {
                 val userFormParameters = call.receive<UserLoginParams>()
@@ -47,6 +51,7 @@ fun Route.userRoute() {
             }
 
         }
+
         authenticate("jwt_auth") {
             route("fcm-token") {
                 get {
@@ -89,6 +94,13 @@ fun Route.userRoute() {
                 val userId = principal!!.payload.getClaim("userId").asString()
                 val getProfileBodyParameters = call.receive<GetProfileParams>();
                 val getUserProfileResult = getUserProfileUseCase(userId = getProfileBodyParameters.userId)
+                call.respond(message = getUserProfileResult, status = getUserProfileResult.statuesCode)
+            }
+            get("/profile/email") {
+                val principal = call.principal<JWTPrincipal>()
+                val userId = principal!!.payload.getClaim("email").asString()
+                val getProfileBodyParameters = call.receive<GetProfileByEmailParams>();
+                val getUserProfileResult = getUserProfileByEmailUseCase(email = getProfileBodyParameters.email)
                 call.respond(message = getUserProfileResult, status = getUserProfileResult.statuesCode)
             }
             post("/send-email-code") {

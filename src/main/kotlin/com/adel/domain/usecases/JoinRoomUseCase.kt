@@ -19,7 +19,7 @@ class JoinRoomUseCase constructor(private val roomRepository: RoomRepository) {
                 return BaseResponse.SuccessResponse(message = "user has joined successfully", data = roomInfoResult)
             // if user isn't participant
             if(!roomRepository.checkIsUserParticipantInRoom(tokenData.userId, roomId))
-                BaseResponse.ErrorResponse(message = "You don't have access to join room", statusCode = HttpStatusCode.Forbidden)
+                BaseResponse.ErrorResponse<RoomModel>(message = "You don't have access to join room", statusCode = HttpStatusCode.Forbidden)
             val joinRoomResult = roomRepository.joinRoom(tokenData.userId, roomId)
             return if (joinRoomResult) {
                 BaseResponse.SuccessResponse(message = "user has joined successfully", data = roomInfoResult)
